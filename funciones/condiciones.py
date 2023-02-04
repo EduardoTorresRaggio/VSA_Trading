@@ -20,16 +20,25 @@ def VSA_Method():
   vol_1 = 0
   vol_2 = 0
   variacion = 0
+  variacion_1 = 0
+  variacion_2 = 0
   comparacion_volumen = []
 
 ## Crear un bucle para leer el dataframe y almacenar el volumen en la lista
-  for i in df:
-    vol_0 = df.iloc(i,5)
-    vol_1 = df.iloc(i+1,5)
-    vol_2 = df.iloc(i+2,5)
-    variacion = df.iloc(1,6)
+  #for i in df:
+    #vol_0 = df.iloc(i,5)
+    #vol_1 = df.iloc(i+1,5)
+    #vol_2 = df.iloc(i+2,5)
+    #variacion = df.iloc(1,6)
 
-    comparacion_volumen = [vol_0, vol_1, vol_2]
+    #comparacion_volumen = [vol_0, vol_1, vol_2]
+  
+  vol_0 = df.iloc(1,5)
+  vol_1 = df.iloc(2,5)
+  vol_2 = df.iloc(3,5)
+  variacion = df.iloc(1,6)
+  variacion_1 = df.iloc(2,6)
+  variacion_2 = df.iloc (3,6)
 
 # CONDICIONES
 ## OFERTA
@@ -51,5 +60,6 @@ def VSA_Method():
 ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
   elif vol_0 < vol_1 and vol_0 < vol_2 and variacion < 0:
     i["VSA"] = "Ns"
+  
   else:
     i["VSA"] = " "

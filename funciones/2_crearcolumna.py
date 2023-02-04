@@ -12,5 +12,5 @@ with open(filename, 'r') as file_in, open("VSA_Datos_NASDAQ100.csv", "w", newlin
     writer.writeheader()
 
     for row in reader:
-        row[new_column] = "valor" #aqui puedes asignar un valor por defecto
+        row[new_column] = " " #aqui puedes asignar un valor por defecto
         writer.writerow(row)

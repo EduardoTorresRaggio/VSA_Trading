@@ -18,11 +18,11 @@ def ObtenerDatosLink():
 
 def UsarArchivoCSV():
     #leer el archivo
-    with open('Datos_historicos_Nasdaq100.csv', newline='') as File:  
+    with open('Datos_historicos_Nasdaq100.csv', newline='',) as File:  
         reader = csv.reader(File)
         for row in reader:
             print(row)
     #guardar archivo formato pandas
-    df = pd.read_csv("Datos_historicos_Nasdaq100.csv")
+    df = pd.read_csv("Datos_historicos_Nasdaq100.csv", decimal = ",")
     df
 UsarArchivoCSV()
