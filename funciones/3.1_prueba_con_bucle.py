@@ -15,78 +15,151 @@ def VSA_Method():
   df.head
 
 #cambiar el nombre de los headers
-  df.columns = ["Fecha","Ultimo","Apertura","Maximo","Minimo","Vol","Variacion","VSA"]
+  df.columns = ["Fecha","Ultimo","Apertura","Maximo","Minimo","Vol","#variacion","VSA"]
   
 #dejar solo cifras (llamada a la funcion)
   df["Vol"] = df["Vol"].map(dejar_solo_cifras)
 
-#cambiar la coma de variacion por punto
-  df["Variacion"] = df["Variacion"].apply(lambda x: x.replace(",","."))
+#cambiar la coma de #variacion por punto
+  df["#variacion"] = df["#variacion"].apply(lambda x: x.replace(",","."))
 #quitar el porcentaje
-  df["Variacion"] = df["Variacion"].apply(lambda x: x.replace("%",""))
+  df["#variacion"] = df["#variacion"].apply(lambda x: x.replace("%",""))
   #print(df)
 
 ## Declaración varibles y la lista
 
-  vol_0 = 0
-  vol_1 = 0
-  vol_2 = 0
-  variacion = 0
-  variacion_1 = 0
-  variacion_2 = 0
-  comparacion_volumen = []
-
-  for dia in df.items():
-
-    vol_0 = int(float(df.iloc[dia,5]))
-    vol_1 = int(float(df.iloc[dia+1,5]))
-    vol_2 = int(float(df.iloc[dia+2,5]))
-    variacion = float(df.iloc[dia,6])
-
-    #COMPROBACION DE LA LECTURA DEL DATAFRAME
-    print( "                                                                     ")
-    print( "#######################################################################" )
-    print( "######################### COMPROBACIÓN ################################" )
-    print( "#######################################################################" )
-    print( "                                                                     ")
-    print(df)
-    print(vol_0)
-    print(type(vol_0))
-    print(vol_1)
-    print(type(vol_1))
-    print(vol_2)
-    print(type(vol_2))
-    print(variacion)
-    print(type(variacion))
-
-    if (vol_0 > vol_1) and (vol_0 > vol_2) and  variacion < 0 :
-      df["VSA"][dia] = "S"
-
-  ## DEMANDA
-  ## Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
-    elif vol_0 > vol_1 and vol_0 > vol_2 and variacion > 0 :
-      df["VSA"][dia] = "D"
-
-    elif (vol_0 > vol_1) and (vol_0 > vol_2) and  variacion < 0 :
-      df["VSA"][dia] = "S"
-
-  ## NO DEMANDA
-  ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
-    elif vol_0 < vol_1 and vol_0 < vol_2 and variacion > 0:
-      df["VSA"][dia] = "Nd"
-
-  ## NO OFERTA
-  ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
-    elif vol_0 < vol_1 and vol_0 < vol_2 and variacion < 0:
-      df["VSA"][dia] = "Ns"
+  # subset[j] = 0
+  # subset[j+1] = 0
+  # subset[j+2] = 0
+  #variacion = 0
+  #variacion_1 = 0
+  #variacion_2 = 0
+  #comparacion_volumen = []
+  subset =[]
+  column = df["Vol"]
+  for index in range(0,len(df),3):
     
+    if not subset:
+      print("La lista está vacía")
+      subset = column.iloc[0:index+3].values
+      subset_ult3 = subset
+      print( "                                                                     ")
+      print( "#######################################################################" )
+      print( "######################### COMPROBACIÓN ################################" )
+      print( "#######################################################################" )
+      print( "                                                                     ")
+      print(subset)
+      print(subset_ult3)
+      #subset[j] = int(float(df.iloc[index,5]))
+      #subset[j+1] = int(float(df.iloc[index,5]))
+      #subset[j+2] = int(float(df.iloc[index,5]))
+      ##variacion = float(df.iloc[(index,6)])
+
+      for j in range(len(subset_ult3)-1):
+
+          if (subset_ult3[j] > subset_ult3[j+1]) and (subset_ult3[j] > subset_ult3[j+2]):   ##variacion < 0 :
+            df["VSA"][index] = "S"
+            print( "                                                                     ")
+            print( "#####################################################################" )
+            print( "######################### METODO VSA ################################" )
+            print( "#####################################################################" )
+            print( "                                                                     ")
+            print(df)
+
+        ## DEMANDA
+        ## Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
+          elif subset_ult3[j] > subset_ult3[j+1] and subset_ult3[j] > subset_ult3[j+2]: #and #variacion > 0 :
+            df["VSA"][index] = "D"
+            print( "                                                                     ")
+            print( "#####################################################################" )
+            print( "######################### METODO VSA ################################" )
+            print( "#####################################################################" )
+            print( "                                                                     ")
+            print(df)
+
+          elif (subset_ult3[j] > subset_ult3[j+1]) and (subset_ult3[j] > subset_ult3[j+2]): #and  #variacion < 0 :
+            df["VSA"][index] = "S"
+            print( "                                                                     ")
+            print( "#####################################################################" )
+            print( "######################### METODO VSA ################################" )
+            print( "#####################################################################" )
+            print( "                                                                     ")
+            print(df)
+
+        ## NO DEMANDA
+        ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
+          elif subset_ult3[j] < subset_ult3[j+1] and subset_ult3[j] < subset_ult3[j+2]: #and #variacion > 0:
+            df["VSA"][index] = "Nd"
+            print( "                                                                     ")
+            print( "#####################################################################" )
+            print( "######################### METODO VSA ################################" )
+            print( "#####################################################################" )
+            print( "                                                                     ")
+            print(df)
+
+        ## NO OFERTA
+        ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
+          elif subset_ult3[j] < subset_ult3[j+1] and subset_ult3[j] < subset_ult3[j+2]: #and #variacion < 0:
+            df["VSA"][index] = "Ns"
+            print( "                                                                     ")
+            print( "#####################################################################" )
+            print( "######################### METODO VSA ################################" )
+            print( "#####################################################################" )
+            print( "                                                                     ")
+            print(df)
+        
+          else:
+            df["VSA"][index] = "Nada"
+            print( "                                                                     ")
+            print( "#####################################################################" )
+            print( "######################### METODO VSA ################################" )
+            print( "#####################################################################" )
+            print( "                                                                     ")
+            print(df)
+      break
     else:
-      df["VSA"][dia] = "Nada"
-    print( "                                                                     ")
-    print( "#####################################################################" )
-    print( "######################### METODO VSA ################################" )
-    print( "#####################################################################" )
-    print( "                                                                     ")
-    print(df)
+      subset_ult3 = subset[1:]
+      print( "                                                                     ")
+      print( "#######################################################################" )
+      print( "######################### COMPROBACIÓN ################################" )
+      print( "#######################################################################" )
+      print( "                                                                     ")
+      print(subset)
+      print(subset_ult3)
+    
+      for j in range(len(subset_ult3)):
+
+          if (subset_ult3[j] > subset_ult3[j+1]) and (subset_ult3[j] > subset_ult3[j+2]):   ##variacion < 0 :
+            df["VSA"][index] = "S"
+
+        ## DEMANDA
+        ## Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
+          elif subset_ult3[j] > subset_ult3[j+1] and subset_ult3[j] > subset_ult3[j+2]: #and #variacion > 0 :
+            df["VSA"][index] = "D"
+
+          elif (subset_ult3[j] > subset_ult3[j+1]) and (subset_ult3[j] > subset_ult3[j+2]): #and  #variacion < 0 :
+            df["VSA"][index] = "S"
+
+        ## NO DEMANDA
+        ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
+          elif subset_ult3[j] < subset_ult3[j+1] and subset_ult3[j] < subset_ult3[j+2]: #and #variacion > 0:
+            df["VSA"][index] = "Nd"
+
+        ## NO OFERTA
+        ### Si el %var es < 0 + volumen de ese día es mayor que los dos anteriores
+          elif subset_ult3[j] < subset_ult3[j+1] and subset_ult3[j] < subset_ult3[j+2]: #and #variacion < 0:
+            df["VSA"][index] = "Ns"
+
+          
+          else:
+            df["VSA"][index] = "Nada"
+
+          print( "                                                                     ")
+          print( "#####################################################################" )
+          print( "######################### METODO VSA ################################" )
+          print( "#####################################################################" )
+          print( "                                                                     ")
+          print(df)
+          break
 
 VSA_Method()
